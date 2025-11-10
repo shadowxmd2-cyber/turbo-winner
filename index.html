@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Reacts Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    background: rgba(0,0,0,0.6);
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    animation: fadeIn 1.5s ease-in-out;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #ffcc00;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  /* Notice */
+  .notice {
+    background: #ffcc00;
+    color: #000;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    margin: 10px 0 5px;
+    font-weight: 600;
+  }
+
+  input, select {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    margin-bottom: 15px;
+    font-size: 1em;
+  }
+
+  select {
+    background: #fff;
+    color: #000;
+  }
+
+  button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background: #ffcc00;
+    color: #000;
+    font-weight: 600;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255,204,0,0.6);
+  }
+
+  .payment-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.95em;
+  }
+
+  @keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(-50px);}
+    100% {opacity: 1; transform: translateY(0);}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Auto Reacts Service</h1>
+
+  <!-- Notice -->
+  <div class="notice">
+    ⚠️ Notice: Orders will be activated within 8 hours.
+  </div>
+
+  <form id="reactForm">
+    <label for="channel">Channel Link</label>
+    <input type="text" id="channel" placeholder="Enter your channel link" required>
+
+    <label for="whatsapp">WhatsApp Number</label>
+    <input type="text" id="whatsapp" placeholder="Enter WhatsApp number" required>
+
+    <label for="payment">Payment Type</label>
+    <select id="payment" required>
+      <option value="" disabled selected>Select Payment</option>
+      <option value="FF Weekly Lite 5% Discount">FF Weekly Lite </option>
+      <option value="Ezcash (Soon)">Ezcash (Soon)</option>
+    </select>
+
+    <label for="duration">Duration</label>
+    <select id="duration" required>
+      <option value="" disabled selected>Select Duration</option>
+      <option value="1 Week">1 Week</option>
+      <option value="2 Weeks">2 Weeks</option>
+    </select>
+
+    <label for="reactType">Type React Emojis</label>
+    <input type="text" id="reactType" placeholder="Example: 💖❤️‍🔥🥰🤩🥳😱💗" required>
+
+    <button type="submit">Submit Order</button>
+  </form>
+
+  <div class="payment-info">
+    <p>Topup UID: <strong>7342852247</strong></p>
+    <p>
+    1 Week - Rs.150
+    
+    2 Week - Rs.250</strong></p>
+  </div>
+</div>
+
+<script>
+  const BOT_TOKEN = "8266023841:AAF7WQf-CngjP6KVcBJS7AeJ8WdcSYxlA5I"; // Replace with your bot token
+  const CHAT_ID = "1720283336";     // Replace with your chat id
+
+  document.getElementById('reactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const channel = document.getElementById('channel').value;
+    const whatsapp = document.getElementById('whatsapp').value;
+    const payment = document.getElementById('payment').value;
+    const duration = document.getElementById('duration').value;
+    const reactType = document.getElementById('reactType').value;
+
+    const message = `
+New Auto Reacts Order:
+Channel: ${channel}
+WhatsApp: ${whatsapp}
+Payment: ${payment}
+Duration: ${duration}
+Reacts: ${reactType}
+    `;
+
+    // Send message to Telegram
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.ok){
+        alert("✅ Order Sent Successfully!");
+        document.getElementById('reactForm').reset();
+      } else {
+        alert("❌ Failed to send order. Please try again.");
+      }
+    })
+    .catch(err => alert("❌ Error: " + err));
+  });
+</script>
+
+</body>
+</html>
